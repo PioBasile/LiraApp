@@ -18,10 +18,6 @@ import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 
 
-private fun MainActivity.rememberSystemUiController() {
-    TODO("Not yet implemented")
-}
-
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

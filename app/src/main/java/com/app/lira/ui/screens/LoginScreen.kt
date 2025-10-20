@@ -22,13 +22,24 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.app.lira.R
+import com.app.lira.data.remote.SupabaseClient
+import com.app.lira.data.repository.AuthRepository
+import kotlinx.coroutines.launch
+
+
 
 @Composable
 fun LoginScreen(
     onCreateAccountClick: () -> Unit = {}
 ) {
-    var username by remember { mutableStateOf("") }
+    val client = SupabaseClient.client
+    val scope = rememberCoroutineScope()
+
+
+    var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    var message by remember { mutableStateOf("") }
+
 
     val backgroundColor = Color(0xFF121417)
     val borderColor = Color(0xFF3D4754)
@@ -66,8 +77,8 @@ fun LoginScreen(
                 modifier = Modifier.offset(y = (-40).dp)
             ) {
                 OutlinedTextField(
-                    value = username,
-                    onValueChange = { username = it },
+                    value = email,
+                    onValueChange = { email = it },
                     placeholder = {
                         Text("Username", color = textColor, fontSize = 14.sp, fontWeight = FontWeight.Medium)
                     },
@@ -107,7 +118,13 @@ fun LoginScreen(
                 )
 
                 Button(
-                    onClick = { /* TODO: login logic */ },
+                    onClick = {
+                        scope.launch {
+                            val result = AuthRepository.signIn(email, password)
+                            message = result.getOrElse { "Login failed: ${it.message}" }
+                            //if (result.isSuccess) onSuccess()
+                        }
+                    },
                     shape = CircleShape,
                     colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
                     border = ButtonDefaults.outlinedButtonBorder.copy(
@@ -120,6 +137,11 @@ fun LoginScreen(
                         .height(40.dp)
                 ) {
                     Text("Log in", color = Color.White, fontSize = 14.sp, fontWeight = FontWeight.SemiBold)
+                }
+
+                if (message.isNotEmpty()) {
+                    Spacer(Modifier.height(16.dp))
+                    Text(message, textAlign = TextAlign.Center, color = Color.White)
                 }
             }
 

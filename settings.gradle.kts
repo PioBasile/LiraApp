@@ -5,6 +5,8 @@ pluginManagement {
                 includeGroupByRegex("com\\.android.*")
                 includeGroupByRegex("com\\.google.*")
                 includeGroupByRegex("androidx.*")
+                maven("https://maven.pkg.jetbrains.space/kotlin/p/kotlin/dev")
+
             }
         }
         mavenCentral()
