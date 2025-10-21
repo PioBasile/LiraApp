@@ -2,7 +2,6 @@ package com.app.lira.ui.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -21,6 +20,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.app.lira.R
 import com.app.lira.data.remote.SupabaseClient
 import com.app.lira.data.repository.AuthRepository
@@ -29,9 +29,7 @@ import kotlinx.coroutines.launch
 
 
 @Composable
-fun LoginScreen(
-    onCreateAccountClick: () -> Unit = {}
-) {
+fun LoginScreen(navController: NavController) {
     val client = SupabaseClient.client
     val scope = rememberCoroutineScope()
 
@@ -120,9 +118,14 @@ fun LoginScreen(
                 Button(
                     onClick = {
                         scope.launch {
-                            val result = AuthRepository.signIn(email, password)
+                            val result = AuthRepository.signUp(email, password)
                             message = result.getOrElse { "Login failed: ${it.message}" }
-                            //if (result.isSuccess) onSuccess()
+                            if (result.isSuccess) {
+                                navController.navigate("addPayed") {
+                                    popUpTo("login") { inclusive = true } // removes login from back stack
+                                }
+
+                            }
                         }
                     },
                     shape = CircleShape,
@@ -159,7 +162,7 @@ fun LoginScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 16.dp)
-                    .clickable { onCreateAccountClick() }
+                    //.clickable { onCreateAccountClick() }
             )
         }
     }

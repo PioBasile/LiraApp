@@ -82,6 +82,10 @@ dependencies {
 
     // --- Utilities ---
     implementation("com.google.accompanist:accompanist-systemuicontroller:0.33.2-alpha")
+    implementation("androidx.navigation:navigation-compose:2.8.0")
+    implementation(libs.androidx.compose.foundation)
+    implementation(libs.androidx.material3)
+
 
     // --- Testing ---
     testImplementation("junit:junit:4.13.2")
